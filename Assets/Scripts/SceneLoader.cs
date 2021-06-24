@@ -5,7 +5,6 @@ using UnityEngine;
 public class SceneLoader : MonoBehaviour
 {
 	[SerializeField] private GameObject _sceneObject;
-	//[SerializeField] private Transform _startX, _finishX, _finishZ;
 	[SerializeField] private Vector3 _startX, _finishX, _finishZ;
 	[SerializeField] private GameObject[] _spawnObjects;
     void Start() {
