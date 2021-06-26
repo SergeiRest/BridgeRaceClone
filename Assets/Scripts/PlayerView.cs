@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerView : MonoBehaviour {
 	[SerializeField] private Material[] _availableMaterials;
-	private MeshRenderer _playerMaterial;
+	[SerializeField] private SkinnedMeshRenderer _playerMaterial;
 	[SerializeField] private Transform _playerBack;
 	private float _endPoint; // Спина
 	private float _step = 0.3f; // Расстояние между объектами
@@ -19,7 +19,7 @@ public class PlayerView : MonoBehaviour {
 
 	private void Init()
 	{
-		_playerMaterial = GetComponent<MeshRenderer>();
+		//_playerMaterial = GetComponent<SkinnedMeshRenderer>();
 		var randomMaterial = Random.Range(0, _availableMaterials.Length);
 		_playerMaterial.material = _availableMaterials[randomMaterial];
 	}
@@ -44,7 +44,6 @@ public class PlayerView : MonoBehaviour {
 		if (_blocksOnPlayer.Count == 0)
 			return;
 		var index = _blocksOnPlayer[_blocksOnPlayer.Count - 1];
-		Debug.Log(index.gameObject.transform.position);
 		_blocksOnPlayer.Remove(index);
 		Destroy(index.gameObject);
 		_pointOnBack = _step * _blocksOnPlayer.Count;
@@ -54,9 +53,4 @@ public class PlayerView : MonoBehaviour {
 	{
 		return _blocksOnPlayer.Count;
 	}
-
-	//public int GetBlockArrayLenght()
-	//{
-	//	return _blocksOnPlayer.Count;
-	//}
 }

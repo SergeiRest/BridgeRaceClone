@@ -8,13 +8,13 @@ public class BlockChecker : MonoBehaviour
 {
 	private PlayerView _player;
 	private Material _material;
+	[SerializeField] private ParticleSystem _trail;
 	private void TryAddBlock(Material playerRender, Material obj, Transform parent, Vector3 backPoints)
 	{
 		if (playerRender.name != obj.name)
 			return;
 		WorldResumption.AddObject(gameObject.transform.position);
-
-		//StartCoroutine(TryMoveBlock());
+		_trail.Play();
 		TryMoveBlock();
 	}
 
@@ -29,9 +29,9 @@ public class BlockChecker : MonoBehaviour
 		}
 	}
 
-	private async void TryMoveBlock() // Доделать
+	private async void TryMoveBlock()
 	{
-		var step = 0.25f;
+		var step = 0.15f;
 		float progress = 0;
 		float currentPointY = _player.Points.y;
 		
@@ -40,12 +40,11 @@ public class BlockChecker : MonoBehaviour
 			transform.position = Vector3.MoveTowards(transform.position, new Vector3(_player.Points.x, currentPointY, _player.Points.z), step);
 			progress += step;
 			await Task.Delay(2);
-			//yield return new WaitForEndOfFrame();
 		}
+		_trail.Stop();
 		_player.AddArray(this);
 		transform.localEulerAngles = new Vector3(0, 90, 0);
 		Debug.Log(transform.localEulerAngles.y);
 		Debug.Log("Перенёс");
-		//yield break;
 	}
 }

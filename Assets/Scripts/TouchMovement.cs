@@ -13,14 +13,11 @@ public class TouchMovement : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 		Vector3 currentPosition = eventData.position;
 		Vector3 directionRaw = currentPosition - _origin;
 		_direction = directionRaw.normalized;
-		//Debug.Log(currentPosition);
 	}
 
 	public void OnPointerDown(PointerEventData eventData)
 	{
-		//OnDrag(eventData);
 		_origin = eventData.position;
-		//Debug.Log(_origin);
 	}
 
 	public void OnPointerUp(PointerEventData eventData)

@@ -2,12 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum RoadType
-{
-	Green,
-	Red,
-	Yellow
-}
 public class RoadBuilder : MonoBehaviour
 {
 	[SerializeField] private Collider _blockCollider;
@@ -15,7 +9,6 @@ public class RoadBuilder : MonoBehaviour
 	private string _roadType = null;
 	private void OnTriggerEnter(Collider other)
 	{
-		WorldResumption.GeneratingObjects();
 		if (other.gameObject.TryGetComponent(out PlayerView player)) {
 			if (player.GetArrayLenght() == 0) {
 				return;
@@ -24,7 +17,6 @@ public class RoadBuilder : MonoBehaviour
 			if (_roadType != player.PlayerMaterial.name)
 			{
 				_roadType = player.PlayerMaterial.name;
-				Debug.Log("Penis");
 				Debug.Log(_parentRender.material.name);
 				Debug.Log($"Скин игрока: {player.PlayerMaterial.name}");
 				_blockCollider.enabled = false;
@@ -32,6 +24,7 @@ public class RoadBuilder : MonoBehaviour
 				_parentRender.material = player.PlayerMaterial;
 				player.TryRemoveBlock();
 			}
+			WorldResumption.GeneratingObjects(player.PlayerMaterial.name);
 		}
 	}
 }
