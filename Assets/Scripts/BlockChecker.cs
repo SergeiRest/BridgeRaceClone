@@ -1,29 +1,47 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BlockChecker : MonoBehaviour
 {
+	private PlayerView _player;
 	private Material _material;
-	private void Start()
+	private void TryAddBlock(Material playerRender, Material obj, Transform parent, Vector3 backPoints)
 	{
-		_material = GetComponent<Material>();
-	}
-	private void TryAddBlock(MeshRenderer playerRender, MeshRenderer obj)
-	{
-		if (playerRender.material.name != obj.material.name)
+		if (playerRender.name != obj.name)
 			return;
-		Debug.Log("True");
+		WorldResumption.AddObject(gameObject.transform.position);
+		_player.AddArray(this);
+		StartCoroutine(TryMoveBlock());
 	}
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if(TryGetComponent(out PlayerView playerView))
+		_material = GetComponent<MeshRenderer>().material;
+		if(other.gameObject.TryGetComponent(out PlayerView playerView))
 		{
-			if (playerView.PlayerMaterial == _material)
-				Debug.Log("True");
-			else
-				Debug.Log("False");
+			_player = playerView;
+			gameObject.GetComponent<Collider>().enabled = false;
+			TryAddBlock(_player.PlayerMaterial, _material, _player.transform, _player.Points);
 		}
+	}
+
+	private IEnumerator TryMoveBlock() // Доделать
+	{
+		var step = 0.25f;
+		float progress = 0;
+		float currentPointY = _player.Points.y;
+		
+		while (transform.position != _player.Points) {
+			gameObject.transform.parent = _player.transform;
+			transform.position = Vector3.MoveTowards(transform.position, new Vector3(_player.Points.x, currentPointY, _player.Points.z), step);
+			progress += step;
+			yield return new WaitForEndOfFrame();
+		}
+		transform.localEulerAngles = new Vector3(0, 90, 0);
+		Debug.Log(transform.localEulerAngles.y);
+		Debug.Log("Перенёс");
+		yield break;
 	}
 }
