@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class BlockChecker : MonoBehaviour
@@ -12,8 +13,9 @@ public class BlockChecker : MonoBehaviour
 		if (playerRender.name != obj.name)
 			return;
 		WorldResumption.AddObject(gameObject.transform.position);
-		_player.AddArray(this);
-		StartCoroutine(TryMoveBlock());
+
+		//StartCoroutine(TryMoveBlock());
+		TryMoveBlock();
 	}
 
 	private void OnTriggerEnter(Collider other)
@@ -27,7 +29,7 @@ public class BlockChecker : MonoBehaviour
 		}
 	}
 
-	private IEnumerator TryMoveBlock() // Доделать
+	private async void TryMoveBlock() // Доделать
 	{
 		var step = 0.25f;
 		float progress = 0;
@@ -37,11 +39,13 @@ public class BlockChecker : MonoBehaviour
 			gameObject.transform.parent = _player.transform;
 			transform.position = Vector3.MoveTowards(transform.position, new Vector3(_player.Points.x, currentPointY, _player.Points.z), step);
 			progress += step;
-			yield return new WaitForEndOfFrame();
+			await Task.Delay(2);
+			//yield return new WaitForEndOfFrame();
 		}
+		_player.AddArray(this);
 		transform.localEulerAngles = new Vector3(0, 90, 0);
 		Debug.Log(transform.localEulerAngles.y);
 		Debug.Log("Перенёс");
-		yield break;
+		//yield break;
 	}
 }

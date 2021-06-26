@@ -10,12 +10,19 @@ public class PlayerView : MonoBehaviour {
 	private float _step = 0.3f; // Расстояние между объектами
 	private float _pointOnBack; // Точка, на которую добавится объект
 	private List<BlockChecker> _blocksOnPlayer = new List<BlockChecker>();
-	public Transform PlayerBack {
-		get {
-			return _playerBack;
-		}
+
+	private void Start()
+	{
+		Init();
+		_endPoint = _playerBack.transform.position.y;
 	}
 
+	private void Init()
+	{
+		_playerMaterial = GetComponent<MeshRenderer>();
+		var randomMaterial = Random.Range(0, _availableMaterials.Length);
+		_playerMaterial.material = _availableMaterials[randomMaterial];
+	}
 	public Vector3 Points {
 		get {
 			_playerBack.transform.position = new Vector3(_playerBack.transform.position.x, _endPoint + _pointOnBack, _playerBack.transform.position.z);
@@ -31,19 +38,25 @@ public class PlayerView : MonoBehaviour {
 		get { return _playerMaterial.material; }
 		private set { }
 	}
-    private void Start() {
-		Init();
-		_endPoint = _playerBack.transform.position.y;
+	
+	public void TryRemoveBlock()
+	{
+		if (_blocksOnPlayer.Count == 0)
+			return;
+		var index = _blocksOnPlayer[_blocksOnPlayer.Count - 1];
+		Debug.Log(index.gameObject.transform.position);
+		_blocksOnPlayer.Remove(index);
+		Destroy(index.gameObject);
+		_pointOnBack = _step * _blocksOnPlayer.Count;
 	}
 
-	private void Init() {
-		_playerMaterial = GetComponent<MeshRenderer>();
-		var randomMaterial = Random.Range(0, _availableMaterials.Length);
-		_playerMaterial.material = _availableMaterials[randomMaterial];
-	}
-
-	public int GetBlockArrayLenght()
+	public int GetArrayLenght()
 	{
 		return _blocksOnPlayer.Count;
 	}
+
+	//public int GetBlockArrayLenght()
+	//{
+	//	return _blocksOnPlayer.Count;
+	//}
 }
